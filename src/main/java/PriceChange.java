@@ -10,6 +10,6 @@ public class PriceChange {
    */
   public PriceChange(int changeRate, Date changeDate) {
     this.changeRate = changeRate;
-    this.changeDate = changeDate;
+    this.changeDate = new Date(changeDate.getYear(), changeDate.getMonth(), changeDate.getDay());
   }
 }
