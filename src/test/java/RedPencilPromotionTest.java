@@ -1,5 +1,4 @@
 import junit.framework.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -9,52 +8,62 @@ import java.util.Date;
 import java.util.List;
 
 public class RedPencilPromotionTest {
-  private static final String ASSERT_MSG_SUCCESS = "Price not reduced, although it should be!";
-  private static final String ASSERT_MSG_FAILURE = "Price is reduced, although it should not!";
+  private static final String MSG_PRICE_NOT_REDUCED = "Price NOT reduced, although it should be!";
+  private static final String MSG_PRICE_REDUCED = "Price IS reduced, although it shouldn't!";
   private RedPencilPromotion rpp;
   private List<PriceChange> priceChanges;
-  private Calendar nowCal;
-
-  @Before
-  public void setUp() {
-    nowCal = Calendar.getInstance();
-  }
 
   @Test
   public void isActive_noPriceChanges() {
     priceChanges = Collections.emptyList();
 
-    rpp = new RedPencilPromotion(priceChanges, nowCal.getTime());
+    rpp = new RedPencilPromotion(priceChanges, nowDate());
 
-    Assert.assertEquals(ASSERT_MSG_FAILURE, false, rpp.isActive());
+    Assert.assertEquals(MSG_PRICE_REDUCED, false, rpp.isActive());
   }
 
   @Test
   public void isActive_singlePriceChangeWithinInterval() {
-    Date tenDaysAgo = createDateNDaysBackFrom(nowCal, 10);
-
-    PriceChange priceChange = new PriceChange(10, tenDaysAgo);
+    PriceChange priceChange = new PriceChange(20, nDaysBackFromNow(10));
     priceChanges = Arrays.asList(priceChange);
 
-    rpp = new RedPencilPromotion(priceChanges, nowCal.getTime());
+    rpp = new RedPencilPromotion(priceChanges, nowDate());
 
-    Assert.assertEquals(ASSERT_MSG_SUCCESS, true, rpp.isActive());
+    Assert.assertEquals(MSG_PRICE_NOT_REDUCED, true, rpp.isActive());
   }
 
-  private Date createDateNDaysBackFrom(Calendar cal, int daysToGoBack) {
+  private static Date nowDate() {
+    return Calendar.getInstance().getTime();
+  }
+
+  private static Date nDaysBackFromNow(int daysToGoBack) {
+    Calendar cal = Calendar.getInstance();
     cal.add(Calendar.DAY_OF_MONTH, -1 * daysToGoBack);
     return cal.getTime();
   }
 
   @Test
+  public void isActive_secondPriceChangeStableLongEnough() {
+    PriceChange priceChangeSeventyDaysAgo = new PriceChange(20, nDaysBackFromNow(70));
+    PriceChange priceChangeTenDaysAgo = new PriceChange(20, nDaysBackFromNow(10));
+    priceChanges = Arrays.asList(priceChangeSeventyDaysAgo, priceChangeTenDaysAgo);
+
+    rpp = new RedPencilPromotion(priceChanges, nowDate());
+
+    Assert.assertEquals(MSG_PRICE_NOT_REDUCED, true, rpp.isActive());
+  }
+
+  /*
+  @Test
   public void isActive_singlePriceChangeOutsideInterval() {
-    Date seventyDaysAgo = createDateNDaysBackFrom(nowCal, 70);
+    Date seventyDaysAgo = nDaysBackFromNow(70);
 
     PriceChange priceChange = new PriceChange(10, seventyDaysAgo);
     priceChanges = Arrays.asList(priceChange);
 
-    rpp = new RedPencilPromotion(priceChanges, nowCal.getTime());
+    rpp = new RedPencilPromotion(priceChanges, nowDate());
 
-    Assert.assertEquals(ASSERT_MSG_SUCCESS, true, rpp.isActive());
+    Assert.assertEquals(MSG_PRICE_REDUCED, false, rpp.isActive());
   }
+  */
 }
