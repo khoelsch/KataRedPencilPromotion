@@ -9,7 +9,7 @@ import java.util.List;
 public class RedPencilPromotionTest {
   private static final String ASSERT_MSG_SUCCESS_EXPECTED = "Price not reduced, although it should be!";
   private RedPencilPromotion rpp;
-  private List<PriceAdjustment> priceAdjustments;
+  private List<PriceChange> priceChanges;
 
   @Test
   public void rppActive_singlePriceAdjustment() {
@@ -18,10 +18,10 @@ public class RedPencilPromotionTest {
     cal.add(Calendar.DAY_OF_MONTH, 10);
     Date tenDaysLater = cal.getTime();
 
-    PriceAdjustment priceAdjustment = new PriceAdjustment(10, tenDaysLater);
-    priceAdjustments = Arrays.asList(priceAdjustment);
+    PriceChange priceChange = new PriceChange(10, tenDaysLater);
+    priceChanges = Arrays.asList(priceChange);
 
-    rpp = new RedPencilPromotion(priceAdjustments);
+    rpp = new RedPencilPromotion(priceChanges);
 
     Assert.assertEquals(ASSERT_MSG_SUCCESS_EXPECTED, true, rpp.isActive());
   }
