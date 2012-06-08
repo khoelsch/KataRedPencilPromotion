@@ -10,6 +10,7 @@ import java.util.List;
 public class RedPencilPromotionTest {
   private static final String MSG_PRICE_NOT_REDUCED = "Price NOT reduced, although it should be!";
   private static final String MSG_PRICE_REDUCED = "Price IS reduced, although it shouldn't!";
+  private static final int DAYS_TO_GO_BACK_WITHIN_PROMOTION_INTERVAL = 10;
   private RedPencilPromotion rpp;
   private List<PriceChange> priceChanges;
 
@@ -22,17 +23,16 @@ public class RedPencilPromotionTest {
     Assert.assertEquals(MSG_PRICE_REDUCED, false, rpp.isActive());
   }
 
-  /*
   @Test
-  public void isActive_singlePriceChangeWithinInterval() {
-    PriceChange priceChange = new PriceChange(20, nDaysBackFromNow(10));
+  public void isActive_singlePriceChangeWithinPromotionInterval() {
+    PriceChange priceChange = new PriceChange(0.8f, nDaysBackFromNow(DAYS_TO_GO_BACK_WITHIN_PROMOTION_INTERVAL));
     priceChanges = Arrays.asList(priceChange);
 
     rpp = new RedPencilPromotion(priceChanges, nowDate());
 
     Assert.assertEquals(MSG_PRICE_NOT_REDUCED, true, rpp.isActive());
   }
-  */
+
 
   private static Date nowDate() {
     return Calendar.getInstance().getTime();

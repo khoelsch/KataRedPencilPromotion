@@ -2,8 +2,8 @@ import java.util.Date;
 import java.util.List;
 
 public class RedPencilPromotion {
-  private final static int CHANGE_RATE_INTERVAL_START = 5;
-  private final static int CHANGE_RATE_INTERVAL_END = 30;
+  private final static float CHANGE_RATE_INTERVAL_START = 0.95f;
+  private final static float CHANGE_RATE_INTERVAL_END = 0.70f;
   private final static int DAYS_PROMOTION_DURATION = 30;
   private final static int DAYS_PRICE_MUST_BE_STABLE = 30;
   private final List<PriceChange> appliedPriceChanges;
@@ -17,18 +17,24 @@ public class RedPencilPromotion {
   }
 
   public boolean isActive() {
-    if (noPriceChanges()) {
-      return false;
+    boolean promotionIsActive = false;
+
+    PriceChange priorPriceChange = null;
+    for (PriceChange currentPriceChange : appliedPriceChanges) {
+      promotionIsActive = changeRateWithinValueInterval(currentPriceChange);
+              //&& priceWasStable(priorPriceChange, currentPriceChange);
+
+      priorPriceChange = currentPriceChange;
     }
 
-    PriceChange lastPriceChange = appliedPriceChanges.get(appliedPriceChanges.size() - 1);
-
-    return fitsChangeRateInterval(lastPriceChange.changeRate)
-            && fitsPromotionInterval();
+    return promotionIsActive;
   }
 
-  private boolean noPriceChanges() {
-    return appliedPriceChanges.size() == 0;
+  private boolean changeRateWithinValueInterval(PriceChange priceChange) {
+    boolean fitsLowerBound = Float.compare(priceChange.priceFactor, CHANGE_RATE_INTERVAL_START) <= 0;
+    boolean fitsUpperBound = Float.compare(priceChange.priceFactor, CHANGE_RATE_INTERVAL_END) >= 0;
+
+    return fitsLowerBound && fitsUpperBound;
   }
 
   private boolean fitsPromotionInterval() {
@@ -36,10 +42,6 @@ public class RedPencilPromotion {
     return false;
 
     //return firstPriceChange.changeDate.compareTo(dateOfEvaluation) <= 0
-  }
-
-  private boolean fitsChangeRateInterval(int adjustmentPercentage) {
-    return adjustmentPercentage >= CHANGE_RATE_INTERVAL_START && adjustmentPercentage <= CHANGE_RATE_INTERVAL_END;
   }
 
   /**
