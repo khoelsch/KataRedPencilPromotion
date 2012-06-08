@@ -17,7 +17,7 @@ public class RedPencilPromotion {
   }
 
   public boolean isActive() {
-    if (appliedPriceChanges.size() == 0) {
+    if (noPriceChanges()) {
       return false;
     }
 
@@ -25,6 +25,10 @@ public class RedPencilPromotion {
 
     return fitsChangeRateInterval(lastPriceChange.changeRate)
             && fitsPromotionInterval();
+  }
+
+  private boolean noPriceChanges() {
+    return appliedPriceChanges.size() == 0;
   }
 
   private boolean fitsPromotionInterval() {

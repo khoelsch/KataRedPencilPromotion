@@ -22,6 +22,7 @@ public class RedPencilPromotionTest {
     Assert.assertEquals(MSG_PRICE_REDUCED, false, rpp.isActive());
   }
 
+  /*
   @Test
   public void isActive_singlePriceChangeWithinInterval() {
     PriceChange priceChange = new PriceChange(20, nDaysBackFromNow(10));
@@ -31,6 +32,7 @@ public class RedPencilPromotionTest {
 
     Assert.assertEquals(MSG_PRICE_NOT_REDUCED, true, rpp.isActive());
   }
+  */
 
   private static Date nowDate() {
     return Calendar.getInstance().getTime();
@@ -42,6 +44,7 @@ public class RedPencilPromotionTest {
     return cal.getTime();
   }
 
+  /*
   @Test
   public void isActive_secondPriceChangeStableLongEnough() {
     PriceChange priceChangeSeventyDaysAgo = new PriceChange(20, nDaysBackFromNow(70));
@@ -52,6 +55,7 @@ public class RedPencilPromotionTest {
 
     Assert.assertEquals(MSG_PRICE_NOT_REDUCED, true, rpp.isActive());
   }
+  */
 
   /*
   @Test
