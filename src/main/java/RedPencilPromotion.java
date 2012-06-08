@@ -2,8 +2,9 @@ import java.util.Date;
 import java.util.List;
 
 public class RedPencilPromotion {
-  private final static float CHANGE_RATE_INTERVAL_START = 0.95f;
-  private final static float CHANGE_RATE_INTERVAL_END = 0.70f;
+  public final static float CHANGE_RATE_INTERVAL_START = 0.95f;
+  public final static float CHANGE_RATE_INTERVAL_END = 0.70f;
+
   private final static int DAYS_PROMOTION_DURATION = 30;
   private final static int DAYS_PRICE_MUST_BE_STABLE = 30;
   private final List<PriceChange> appliedPriceChanges;

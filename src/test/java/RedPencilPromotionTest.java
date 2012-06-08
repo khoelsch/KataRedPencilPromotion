@@ -33,6 +33,32 @@ public class RedPencilPromotionTest {
     Assert.assertEquals(MSG_PRICE_NOT_REDUCED, true, rpp.isActive());
   }
 
+  @Test
+  public void isActive_singlePriceChangeOnPromotionIntervalStart() {
+    final float priceFactor = RedPencilPromotion.CHANGE_RATE_INTERVAL_START;
+    final Date changeDate = nDaysBackFromNow(DAYS_TO_GO_BACK_WITHIN_PROMOTION_INTERVAL);
+
+    PriceChange priceChange = new PriceChange(priceFactor, changeDate);
+    priceChanges = Arrays.asList(priceChange);
+
+    rpp = new RedPencilPromotion(priceChanges, nowDate());
+
+    Assert.assertEquals(MSG_PRICE_NOT_REDUCED, true, rpp.isActive());
+  }
+
+  @Test
+  public void isActive_singlePriceChangeOnPromotionIntervalEnd() {
+    final float priceFactor = RedPencilPromotion.CHANGE_RATE_INTERVAL_END;
+    final Date changeDate = nDaysBackFromNow(DAYS_TO_GO_BACK_WITHIN_PROMOTION_INTERVAL);
+
+    PriceChange priceChange = new PriceChange(priceFactor, changeDate);
+    priceChanges = Arrays.asList(priceChange);
+
+    rpp = new RedPencilPromotion(priceChanges, nowDate());
+
+    Assert.assertEquals(MSG_PRICE_NOT_REDUCED, true, rpp.isActive());
+  }
+
 
   private static Date nowDate() {
     return Calendar.getInstance().getTime();
