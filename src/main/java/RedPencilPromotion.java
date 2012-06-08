@@ -6,6 +6,7 @@ public class RedPencilPromotion {
   public final static float PRICE_FACTOR_INTERVAL_START = 0.95f;
   public final static float PRICE_FACTOR_INTERVAL_END = 0.70f;
   public final static int DAYS_PRICE_MUST_BE_STABLE = 30;
+  public final static int DAYS_MAXIMUM_PROMOTION_DURATION = 30;
 
   private final List<PriceChange> appliedPriceChanges;
   private final Date dateOfEvaluation;
@@ -28,12 +29,12 @@ public class RedPencilPromotion {
                 && priceWasStable(priorPriceChange, currentPriceChange)) {
           promotionIsActive = true;
           promotionStartPriceChange = currentPriceChange;
+        }
+
+        priorPriceChange = currentPriceChange;
       }
-
-      priorPriceChange = currentPriceChange;
     }
-
-    return promotionIsActive && promotionHasNotEnded(promotionStartPriceChange);
+    return promotionIsActive && promotionHasNotEnded(promotionStartPriceChange.changeDate);
   }
 
   private boolean changeRateWithinValueInterval(PriceChange priceChange) {
@@ -48,17 +49,23 @@ public class RedPencilPromotion {
       return true;
     }
 
-    final Calendar cal =  Calendar.getInstance();
-    cal.setTime(currentPriceChange.changeDate);
-    cal.add(Calendar.DAY_OF_MONTH, -1 * RedPencilPromotion.DAYS_PRICE_MUST_BE_STABLE);
+    return isDateWithinRange(priorPriceChange.changeDate,
+            currentPriceChange.changeDate,
+            RedPencilPromotion.DAYS_PRICE_MUST_BE_STABLE);
+  }
+
+  private boolean isDateWithinRange(final Date dateToCheck, final Date referenceDate, final int daysToGoBack) {
+    final Calendar cal = Calendar.getInstance();
+    cal.setTime(referenceDate);
+    cal.add(Calendar.DAY_OF_MONTH, -1 * daysToGoBack);
     final Date earliestValidChangeDate = cal.getTime();
-
-    return priorPriceChange.changeDate.compareTo(earliestValidChangeDate) <= 0;
+    return dateToCheck.compareTo(earliestValidChangeDate) <= 0;
   }
 
-  private boolean promotionHasNotEnded(PriceChange promotionStartPriceChange) {
-
-  }
+  private boolean promotionHasNotEnded(final Date promotionStartPriceChangeDate) {
+    return isDateWithinRange(promotionStartPriceChangeDate,
+            dateOfEvaluation,
+            DAYS_MAXIMUM_PROMOTION_DURATION);
   }
 }
 

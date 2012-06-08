@@ -117,8 +117,7 @@ public class RedPencilPromotionTest {
 
   @Test
   public void notActive_promotionEndedAfterMaximumDays() {
-    final float priceFactor1 = ACTIVE_PROMOTION_PRICE_FACTOR;
-    PriceChange pc1 = new PriceChange(priceFactor1, nDaysBackFromNow(40));
+    PriceChange pc1 = new PriceChange(ACTIVE_PROMOTION_PRICE_FACTOR, nDaysBackFromNow(40));
 
     priceChanges = Arrays.asList(pc1);
     rpp = new RedPencilPromotion(priceChanges, nowDate());
