@@ -115,33 +115,16 @@ public class RedPencilPromotionTest {
     assertPromotionIsActive();
   }
 
-  /*
   @Test
-  public void isActive_secondPriceChangeStableLongEnough() {
-    PriceChange priceChangeSeventyDaysAgo = new PriceChange(20, nDaysBackFromNow(70));
-    PriceChange priceChangeTenDaysAgo = new PriceChange(20, nDaysBackFromNow(10));
-    priceChanges = Arrays.asList(priceChangeSeventyDaysAgo, priceChangeTenDaysAgo);
+  public void notActive_promotionEndedAfterMaximumDays() {
+    final float priceFactor1 = ACTIVE_PROMOTION_PRICE_FACTOR;
+    PriceChange pc1 = new PriceChange(priceFactor1, nDaysBackFromNow(40));
 
+    priceChanges = Arrays.asList(pc1);
     rpp = new RedPencilPromotion(priceChanges, nowDate());
 
-    Assert.assertEquals(MSG_PRICE_NOT_REDUCED, true, rpp.isActive());
+    assertPromotionNotActive();
   }
-  */
-
-
-  /*
-  @Test
-  public void isActive_singlePriceChangeOutsideInterval() {
-    Date seventyDaysAgo = nDaysBackFromNow(70);
-
-    PriceChange priceChange = new PriceChange(10, seventyDaysAgo);
-    priceChanges = Arrays.asList(priceChange);
-
-    rpp = new RedPencilPromotion(priceChanges, nowDate());
-
-    Assert.assertEquals(MSG_PRICE_REDUCED, false, rpp.isActive());
-  }
-  */
 
   // --------------
   // Helper methods

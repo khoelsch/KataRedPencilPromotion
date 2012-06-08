@@ -21,14 +21,19 @@ public class RedPencilPromotion {
     boolean promotionIsActive = false;
 
     PriceChange priorPriceChange = null;
+    PriceChange promotionStartPriceChange = null;
     for (PriceChange currentPriceChange : appliedPriceChanges) {
-      promotionIsActive = changeRateWithinValueInterval(currentPriceChange)
-              && priceWasStable(priorPriceChange, currentPriceChange);
+      if (!promotionIsActive) {
+        if (changeRateWithinValueInterval(currentPriceChange)
+                && priceWasStable(priorPriceChange, currentPriceChange)) {
+          promotionIsActive = true;
+          promotionStartPriceChange = currentPriceChange;
+      }
 
       priorPriceChange = currentPriceChange;
     }
 
-    return promotionIsActive;
+    return promotionIsActive && promotionHasNotEnded(promotionStartPriceChange);
   }
 
   private boolean changeRateWithinValueInterval(PriceChange priceChange) {
@@ -49,6 +54,11 @@ public class RedPencilPromotion {
     final Date earliestValidChangeDate = cal.getTime();
 
     return priorPriceChange.changeDate.compareTo(earliestValidChangeDate) <= 0;
+  }
+
+  private boolean promotionHasNotEnded(PriceChange promotionStartPriceChange) {
+
+  }
   }
 }
 
